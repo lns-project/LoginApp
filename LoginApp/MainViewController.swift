@@ -7,13 +7,25 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 
     @IBOutlet var userNameTF: UITextField!
     @IBOutlet var userPasswordTF: UITextField!
     
-    let currentUserName = "User"
-    let currentPassword = "Password"
+    private let currentUserName = "User"
+    private let currentPassword = "Password"
+    
+    // Метод для скрытия клавиатуры тапом по экрану
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let loginVC = segue.destination as? WelcomeViewController, let text = userNameTF.text {
+            loginVC.userName = text
+        }
+    }
 
     @IBAction func forgotNamePressed(_ sender: UIButton!) {
         showAlert(title: "Oops!", message: "Your name is \(currentUserName) 😉")
@@ -32,34 +44,19 @@ class ViewController: UIViewController {
         }
         performSegue(withIdentifier: "secondVCSegue", sender: sender)
     }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let loginVC = segue.destination as? WelcomeViewController, let text = userNameTF.text {
-            loginVC.userName = text
-        }
-    }
     
     @IBAction func unwindSegue(_ segue: UIStoryboardSegue) {
         guard segue.source is WelcomeViewController else { return }
         userNameTF.text = ""
         userPasswordTF.text = ""
     }
-    
-    // Метод для скрытия клавиатуры тапом по экрану
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-    }
 }
 
 
 // MARK: - UIAlertController
-extension ViewController {
+extension MainViewController {
     private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let okAction = UIAlertAction(title: "Ok", style: .default)
         
