@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WelcomeViewController: UIViewController {
+final class WelcomeViewController: UIViewController {
 
     @IBOutlet var greetingsIcon: UITextField!
     @IBOutlet var greetingUserTF: UITextField!

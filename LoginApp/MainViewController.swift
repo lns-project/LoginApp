@@ -8,7 +8,7 @@
 import UIKit
 
 class MainViewController: UIViewController {
-
+    
     @IBOutlet var userNameTF: UITextField!
     @IBOutlet var userPasswordTF: UITextField!
     
@@ -26,7 +26,7 @@ class MainViewController: UIViewController {
             loginVC.userName = text
         }
     }
-
+    
     @IBAction func forgotNamePressed(_ sender: UIButton!) {
         showAlert(title: "Oops!", message: "Your name is \(currentUserName) 😉")
     }
@@ -46,15 +46,10 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func unwindSegue(_ segue: UIStoryboardSegue) {
-        guard segue.source is WelcomeViewController else { return }
         userNameTF.text = ""
         userPasswordTF.text = ""
     }
-}
-
-
-// MARK: - UIAlertController
-extension MainViewController {
+    
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
