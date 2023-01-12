@@ -7,19 +7,28 @@
 
 import UIKit
 
-final class WelcomeViewController: UIViewController {
+// MARK: ViewController
 
+final class WelcomeViewController: UIViewController {
+    
+    // MARK: Outlets
+    
     @IBOutlet var greetingsIcon: UITextField!
     @IBOutlet var greetingUserTF: UITextField!
     
     var userName: String!
+    private let user = UserManager().getUser()
+    
+    // MARK: viewDidLoad
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setGradientBackground()
-        greetingUserTF.text = "Welcome, \(userName ?? "")!"
+        greetingUserTF.text = "Welcome, \(user.name)!"
         greetingsIcon.text = "👋"
     }
+  
+    // MARK: - Set background color
     
     private func setGradientBackground() {
         let colorTop =  UIColor(red: 192.0/255.0, green: 129.0/255.0, blue: 143.0/255.0, alpha: 1.0).cgColor

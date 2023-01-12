@@ -7,13 +7,20 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+// MARK: ViewController
+
+class LoginViewController: UIViewController {
+    
+    // MARK: Outlets
     
     @IBOutlet var userNameTF: UITextField!
     @IBOutlet var userPasswordTF: UITextField!
     
-    private let currentUserName = "User"
-    private let currentPassword = "Password"
+    // MARK: Private properties
+    
+    private let user = UserManager().getUser()
+    
+    // MARK: Methods
     
     // Метод для скрытия клавиатуры тапом по экрану
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -22,33 +29,43 @@ class MainViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let loginVC = segue.destination as? WelcomeViewController, let text = userNameTF.text {
-            loginVC.userName = text
+        guard let tabBarVC = segue.destination as? UITabBarController else { return }
+        guard let viewControllers = tabBarVC.viewControllers else { return }
+        
+        viewControllers.forEach { viewController in
+            if let loginVC = viewController as? WelcomeViewController, let text = userNameTF.text {
+                loginVC.userName = text
+            } else if let navigationVC = viewController as? UINavigationController {
+                guard navigationVC.topViewController is UserInfoViewController else { return }
+            }
         }
     }
     
     @IBAction func forgotNamePressed(_ sender: UIButton!) {
-        showAlert(title: "Oops!", message: "Your name is \(currentUserName) 😉")
+        showAlert(title: "Oops!", message: "Your name is \(user.login) 😉")
     }
     
     @IBAction func forgotPasswordPressed(_ sender: UIButton) {
-        showAlert(title: "Oops!", message: "Your password is \(currentPassword) 😉")
+        showAlert(title: "Oops!", message: "Your password is \(user.password) 😉")
     }
     
     @IBAction func logInPressed(_ sender: UIButton) {
-        guard userNameTF.text == currentUserName, userPasswordTF.text == currentPassword else {
+        guard userNameTF.text == user.login, userPasswordTF.text == user.password else {
             showAlert(title: "Invalid login or password",
                       message: "Please, enter correct login and password")
             userPasswordTF.text = ""
             return
         }
-        performSegue(withIdentifier: "secondVCSegue", sender: sender)
+        performSegue(withIdentifier: "tabbarSegue", sender: sender)
+
     }
     
     @IBAction func unwindSegue(_ segue: UIStoryboardSegue) {
         userNameTF.text = ""
         userPasswordTF.text = ""
     }
+    
+    // MARK: Private methods
     
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
